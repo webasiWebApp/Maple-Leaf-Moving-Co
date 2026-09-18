@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, Phone } from "lucide-react";
 import type { ReactNode } from "react";
-import mapleBackground from "@/assets/maple-pattern-background.jpg.asset.json";
 import logo from "@/assets/mapleleaf-moving-wordmark-transparent.png";
 
 export function SiteHeader({ light = false }: { light?: boolean }) {
@@ -31,5 +30,5 @@ export function SiteFooter() {
 }
 
 export function PageShell({ children, lightHeader = false }: { children: ReactNode; lightHeader?: boolean }) {
-  return <div className="site-wallpaper min-h-screen text-foreground" style={{ backgroundImage: `linear-gradient(oklch(0.96 0.015 85 / 88%), oklch(0.96 0.015 85 / 88%)), url(${mapleBackground.url})` }}><div className="min-h-screen"><SiteHeader light={lightHeader}/>{children}<SiteFooter/></div></div>;
+  return <div className="site-wallpaper min-h-screen text-foreground" style={{ backgroundImage: `linear-gradient(oklch(0.96 0.015 85 / 88%), oklch(0.96 0.015 85 / 88%))` }}><div className="min-h-screen"><SiteHeader light={lightHeader}/>{children}<SiteFooter/></div></div>;
 }

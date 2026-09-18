@@ -1,16 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Mail, Package, Phone, Truck, Warehouse } from "lucide-react";
-import truckStreet from "@/assets/truck-street.jpg.asset.json";
+import truckStreet from "@/assets/truck-street.jpg";
 
-import crewLoading from "@/assets/crew-loading.jpg.asset.json";
-import crewSofa from "@/assets/crew-sofa.jpg.asset.json";
-import crewStairs from "@/assets/crew-stairs.jpg.asset.json";
-import crewAppliance from "@/assets/crew-appliance.jpg.asset.json";
-import condoTruck from "@/assets/condo-truck.jpg.asset.json";
+import crewLoading from "@/assets/crew-loading.jpg";
+import crewSofa from "@/assets/crew-sofa.jpg";
+import crewStairs from "@/assets/crew-stairs.jpg";
+import crewAppliance from "@/assets/crew-appliance.jpg";
+import condoTruck from "@/assets/condo-truck.jpg";
 import logo from "@/assets/mapleleaf-moving-wordmark-transparent.png";
-import mapleBackground from "@/assets/maple-pattern-background.jpg.asset.json";
-import storageUnits from "@/assets/storage-units.jpg.asset.json";
+import storageUnits from "@/assets/storage-units.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -80,7 +79,7 @@ function Index() {
   };
 
   return (
-    <div className="site-wallpaper min-h-screen text-foreground" style={{ backgroundImage: `linear-gradient(oklch(0.96 0.015 85 / 88%), oklch(0.96 0.015 85 / 88%)), url(${mapleBackground.url})` }}>
+    <div className="site-wallpaper min-h-screen text-foreground" style={{ backgroundImage: `linear-gradient(oklch(0.96 0.015 85 / 88%), oklch(0.96 0.015 85 / 88%))` }}>
       {/* Nav */}
       <header className="border-b border-ink/10 px-6 py-5 md:px-12">
         <div className="flex flex-wrap items-center justify-between gap-4">
@@ -282,7 +281,7 @@ function Index() {
       <section className="px-6 pb-14 md:px-12">
         <div className="relative">
           <img
-            src={truckStreet.url}
+            src={truckStreet}
             alt="Mapleleaf Moving Co truck parked on a tree-lined Toronto street"
             className="h-72 w-full object-cover md:h-[26rem]"
             loading="lazy"
@@ -309,7 +308,7 @@ function Index() {
         <div className="grid gap-5 md:grid-cols-3">
           <div className="overflow-hidden rounded-2xl border border-ink/5 bg-sand/50">
             <img
-              src={condoTruck.url}
+              src={condoTruck}
               alt="Moving truck outside a Toronto condo building"
               className="h-44 w-full object-cover"
               loading="lazy"
@@ -330,7 +329,7 @@ function Index() {
           </div>
           <div className="overflow-hidden rounded-2xl border border-ink/5 bg-sand/50">
             <img
-              src={crewSofa.url}
+              src={crewSofa}
               alt="Two movers carefully wrapping and packing a living room"
               className="h-44 w-full object-cover"
               loading="lazy"
@@ -351,7 +350,7 @@ function Index() {
           </div>
           <div className="overflow-hidden rounded-2xl border border-ink/5 bg-sand/50">
             <img
-              src={storageUnits.url}
+              src={storageUnits}
               alt="Clean corridor of orange self-storage units used for Mapleleaf Moving Co storage"
               className="h-44 w-full object-cover"
               loading="lazy"
@@ -385,19 +384,19 @@ function Index() {
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           <img
-            src={crewLoading.url}
+            src={crewLoading}
             alt="Movers loading boxes onto a truck liftgate"
             className="h-64 w-full rounded-2xl object-cover"
             loading="lazy"
           />
           <img
-            src={crewStairs.url}
+            src={crewStairs}
             alt="Two movers carrying a wrapped sofa down a staircase"
             className="h-64 w-full rounded-2xl object-cover object-right"
             loading="lazy"
           />
           <img
-            src={crewAppliance.url}
+            src={crewAppliance}
             alt="Movers wheeling a washing machine into a kitchen"
             className="h-64 w-full rounded-2xl object-cover object-right sm:col-span-2 lg:col-span-1"
             loading="lazy"
