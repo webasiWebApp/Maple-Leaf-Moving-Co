@@ -1,0 +1,200 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system definition.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Brand palette */
+  --color-brand: var(--brand);
+  --color-moss: var(--moss);
+  --color-amber: var(--amber);
+  --color-maple: var(--maple);
+  --color-maple-deep: var(--maple-deep);
+  --color-cream: var(--cream);
+  --color-sand: var(--sand);
+  --color-ink: var(--ink);
+
+  /* Typography */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.75rem;
+
+  --brand: oklch(0.22 0.04 155);
+  --moss: oklch(0.38 0.06 155);
+  --amber: oklch(0.58 0.14 45);
+  --maple: oklch(0.53 0.2 28);
+  --maple-deep: oklch(0.4 0.16 28);
+  --cream: oklch(0.96 0.015 85);
+  --sand: oklch(0.89 0.03 85);
+  --ink: oklch(0.18 0.02 85);
+
+  --background: var(--cream);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--ink);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand);
+  --primary-foreground: var(--cream);
+  --secondary: var(--sand);
+  --secondary-foreground: var(--ink);
+  --muted: var(--sand);
+  --muted-foreground: oklch(0.45 0.02 85);
+  --accent: var(--amber);
+  --accent-foreground: var(--cream);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.18 0.02 85 / 10%);
+  --input: oklch(0.89 0.03 85 / 40%);
+  --ring: var(--amber);
+  --chart-1: var(--amber);
+  --chart-2: var(--moss);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: var(--cream);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: var(--cream);
+  --sidebar-accent: var(--sand);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: oklch(0.18 0.02 85 / 10%);
+  --sidebar-ring: var(--amber);
+}
+
+.dark {
+  --background: var(--ink);
+  --foreground: var(--cream);
+  --card: var(--brand);
+  --card-foreground: var(--cream);
+  --popover: var(--brand);
+  --popover-foreground: var(--cream);
+  --primary: var(--cream);
+  --primary-foreground: var(--ink);
+  --secondary: var(--moss);
+  --secondary-foreground: var(--cream);
+  --muted: var(--moss);
+  --muted-foreground: oklch(0.75 0.02 85);
+  --accent: var(--amber);
+  --accent-foreground: var(--cream);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: var(--amber);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: var(--brand);
+  --sidebar-foreground: var(--cream);
+  --sidebar-primary: var(--amber);
+  --sidebar-primary-foreground: var(--cream);
+  --sidebar-accent: var(--moss);
+  --sidebar-accent-foreground: var(--cream);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: var(--amber);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+}
+
+.site-wallpaper {
+  background-attachment: fixed;
+  background-position: top center;
+  background-repeat: repeat;
+  background-size: 480px 240px;
+}
+
+@media (max-width: 640px) {
+  .site-wallpaper {
+    background-attachment: scroll;
+    background-size: 360px 180px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
