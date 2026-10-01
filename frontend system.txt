@@ -1,0 +1,226 @@
+Listed directory frontend
+Listed directory Maple-Leaf-Moving-Co
+Viewed package.json:1-93
+Viewed README.md:1-30
+Viewed roadmap.md:1-49
+Viewed AGENTS.md:1-11
+Viewed vite.config.ts:1-16
+Listed directory src
+Listed directory routes
+Listed directory _authenticated
+Listed directory components
+Listed directory hooks
+Listed directory integrations
+Listed directory supabase
+Listed directory lovable
+Listed directory lib
+Listed directory assets
+Listed directory public
+Listed directory supabase
+Listed directory migrations
+Listed directory backend
+Viewed __root.tsx:1-140
+Viewed styles.css:1-201
+Viewed site-shell.tsx:1-35
+Viewed index.tsx:1-150
+Searched for "maple-"
+Viewed quote.tsx:1-92
+Viewed contact.tsx:1-91
+Viewed auth.tsx:1-20
+Viewed route.tsx:1-26
+Viewed portal.tsx:1-24
+Viewed booking.functions.ts:1-134
+Viewed maps.functions.ts:1-107
+Viewed quote-engine.ts:1-100
+Viewed quote-engine.ts:101-250
+Viewed quote-engine.ts:251-296
+Viewed index.tsx:151-300
+Viewed index.tsx:301-434
+Viewed client.ts:1-70
+Viewed .env:1-8
+Viewed 20260914201208_3035188b-2ced-4087-9bcc-6812386e93c6.sql:1-107
+Viewed 20260914201220_3723302c-1ccb-46eb-8707-62479c8158fd.sql
+Listed directory ui
+Viewed server.ts:1-62
+Viewed start.ts:1-32
+Viewed router.tsx:1-17
+Ran command: `Test-Path node_modules`
+Used tool: manage_task
+Viewed package.json:1-17
+Viewed app.js:1-42
+Ran command: `git status`
+Used tool: manage_task
+Viewed routeTree.gen.ts:1-100
+
+# Comprehensive Analysis & Audit Report: `frontend`
+**Project:** Mapleleaf Moving Co (Toronto Moving Services)  
+**Location:** [`frontend/`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend)  
+**Date:** March 2026
+
+---
+
+## 1. Executive Summary
+
+The [`frontend/`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend) application is a **modern full-stack SSR web application** built with **TanStack Start**, **React 19**, **Tailwind CSS v4**, and **Supabase**. It represents the digital customer-facing portal and lead engine for **Mapleleaf Moving Co**, a Toronto-based moving company operating since 2009.
+
+The application is largely functional, featuring a custom quoting calculation engine, address autocomplete integration, and authenticated customer dashboard for booking requests. However, our audit revealed **critical disconnects** between the homepage quick-quote tool and the quoting engine, mock/unconnected contact form submissions, missing environment variables in local configuration, and styling/navigation inconsistencies.
+
+---
+
+## 2. Technical Stack Breakdown
+
+| Layer | Technology | Version | Description & Role |
+| :--- | :--- | :--- | :--- |
+| **Framework & SSR** | [TanStack Start](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/package.json#L50) / [Nitro](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/package.json#L86) | `1.168.32` / `3.0-beta` | Full-stack server-side rendering, server functions (`createServerFn`), and request routing. |
+| **Core UI** | React / React DOM | `^19.2.0` | Latest React 19 runtime with modern concurrent features. |
+| **Routing** | [TanStack Router](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/package.json#L49) | `1.170.18` | File-based, type-safe router with code generation ([`routeTree.gen.ts`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routeTree.gen.ts)). |
+| **State & Cache** | [TanStack Query](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/package.json#L48) | `^5.101.1` | Client-side query caching and server-state invalidation. |
+| **Styling** | [Tailwind CSS v4](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/package.json#L67) | `^4.2.1` | CSS `@theme inline` with CSS variables in OKLCH format ([`styles.css`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/styles.css)). |
+| **Component Kit** | Radix UI Primitives + shadcn/ui | 46 components | Full accessible component library in [`components/ui/`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/components/ui). |
+| **Database & Auth** | [Supabase](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/integrations/supabase/client.ts) | `@supabase/supabase-js ^2.116.0` | PostgreSQL database with Row Level Security (RLS) + Supabase Auth. |
+| **Integrations** | Lovable Cloud Connectors | `@lovable.dev/*` | Google Maps API gateway proxy (Places Autocomplete & Directions API). |
+| **Validation** | Zod | `^3.25.76` | Runtime payload validation for server functions and client forms. |
+
+> [!NOTE]
+> The sibling [`backend/`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/backend) folder in the project root is an empty, untouched Express 4.16 boilerplate generated from `express-generator`. It is **not connected** to the frontend; the actual backend is handled entirely inside `frontend/` via TanStack Start Server Functions and Supabase.
+
+---
+
+## 3. Architecture & Routing Structure
+
+The application routes are located under [`src/routes/`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes):
+
+```mermaid
+graph TD
+    Root["__root.tsx (HTML Shell, Fonts, Global CSS, QueryClient)"]
+    Root --> Home["/ (index.tsx) - Landing Page & Hero Quick Estimate"]
+    Root --> Quote["/quote (quote.tsx) - 4-Step Interactive Quote Engine"]
+    Root --> Contact["/contact (contact.tsx) - Location & Message Form"]
+    Root --> Auth["/auth (auth.tsx) - Sign In / Sign Up with OAuth & Email"]
+    Root --> AuthGuard["/_authenticated (route.tsx) - Session Guard"]
+    AuthGuard --> Portal["/portal (portal.tsx) - 'My Move' Customer Dashboard"]
+```
+
+### Route Summary
+
+1. **[`__root.tsx`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/__root.tsx)**:
+   - Configures site-wide SEO metadata (OpenGraph, Twitter cards).
+   - Injects Google Fonts (`Fraunces` editorial serif and `Manrope` sans-serif).
+   - Wraps child routes in `QueryClientProvider` and sets 404/500 error boundaries.
+2. **[`index.tsx`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/index.tsx)**:
+   - Hero banner with quick estimation calculator.
+   - Core services showcase: Local & Intercity ($95/hr), Packing & Unpacking ($60/hr), and Storage ($45/mo).
+   - Gallery band showing Toronto moving crews and trucks.
+3. **[`quote.tsx`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/quote.tsx)**:
+   - 4-step wizard:
+     1. **Route**: Origin, destination, real-time Google Maps distance/duration, home size preset.
+     2. **Inventory**: Room-by-room breakdown (Bedroom, Living Room, Dining Room, Kitchen, Boxes, Specialty).
+     3. **Schedule**: Move date with peak date detection, arrival windows (AM/Midday/PM), access/stairs, and add-ons.
+     4. **Details**: Customer contact info, notes, and quote submission.
+   - Live sticky pricing breakdown sidebar updated on every click.
+4. **[`contact.tsx`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/contact.tsx)**:
+   - Displays company location (207 Weston Road, Toronto, ON M6N 4Z3), phone (`416 737 7674`), and email (`hi@mapleleafmovingco.com`).
+   - Inquiry submission form with topic selection.
+5. **[`auth.tsx`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/auth.tsx)**:
+   - Supports Email/Password authentication and Google OAuth.
+   - Preserves redirect path with `?next=/portal` query param.
+6. **[`_authenticated/portal.tsx`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/_authenticated/portal.tsx)**:
+   - Protected customer portal displaying active quotes, confirmed bookings, and deposit status.
+   - Modal for digital booking agreement acceptance with legal signature confirmation.
+
+---
+
+## 4. Business Logic & Pricing Engine Analysis
+
+The pricing algorithm in [`quote-engine.ts`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/lib/quote-engine.ts) is well-structured and handles realistic moving economics:
+
+- **Crew Rates & Sizing**:
+  - 2 movers: $139/hr (up to 520 cu ft)
+  - 3 movers: $189/hr (521–950 cu ft)
+  - 4 movers: $239/hr (>950 cu ft)
+- **Minimum Hours**: 3-hour minimum floor enforced on all moves.
+- **Fixed Costs**: Flat truck & equipment fee of $90.00 (`TRUCK_FEE_CENTS = 9000`).
+- **Distance Surcharge**: First 30 km free; $1.60/km thereafter (`LONG_HAUL_PER_KM_CENTS = 160`).
+- **Stairs Time Additions**:
+  - 1 flight: +25 mins
+  - 2 flights: +45 mins
+  - 3+ flights: +75 mins
+- **Dynamic Multipliers**:
+  - **Peak Days**: +15% surcharge on weekends (Saturday/Sunday) and month-end dates (2 days before or 1 day after end of month).
+  - **Arrival Windows**: Morning (8–10 AM) +5%, Midday (11 AM–1 PM) 1.0x, Afternoon (2–4 PM) -5%.
+  - **Flexible Date Discount**: -5% subtotal discount if client checks "My dates are flexible".
+- **Deposit Requirement**: 15% of estimated low price, rounded to the nearest $5.00 (minimum $100.00).
+
+---
+
+## 5. Database Schema & Data Flow
+
+Database migrations are defined in [`supabase/migrations/`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/supabase/migrations):
+
+```
+┌──────────────┐       1:N       ┌──────────────┐       1:1       ┌──────────────┐
+│ auth.users   ├────────────────►│    quotes    ├────────────────►│   bookings   │
+└──────┬───────┘                 └──────────────┘                 └──────┬───────┘
+       │ 1:1                                                             │ 1:N
+       ▼                                                                 ▼
+┌──────────────┐                                                  ┌──────────────┐
+│   profiles   │                                                  │booking_events│
+└──────────────┘                                                  └──────────────┘
+```
+
+- **`profiles`**: User metadata (full name, phone, email).
+- **`quotes`**: Stores full quote parameters (`inventory` JSONB, route, home size, pricing in cents, contact details). Public `anon` users have permission to insert quotes with `user_id IS NULL`. Authenticated users can view and edit their own quotes.
+- **`bookings`**: Stores confirmed moves created from accepted quotes with `deposit_status: 'pending'`, `agreement_name`, and timestamp.
+- **`booking_events`**: Audit log of milestone events for a move.
+
+---
+
+## 6. Key Deficiencies, Bugs & Risks
+
+### ⚠️ Critical Findings
+
+1. **Homepage Hero Quick Quote Form is Disconnected from Database & Missing Contact Inputs**:
+   - In [`index.tsx:L179-275`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/index.tsx#L179-L275), the hero form provides fields for *From*, *To*, *Home Size*, and *Date*, but has **no input for Name, Email, or Phone**.
+   - Submitting this form runs `setSubmitted(true)` client-side and renders: *"Thanks! We'll call you at the number on file within one business hour."*
+   - No data is sent to Supabase or transmitted anywhere, and no phone number was ever collected.
+   - **Impact**: Any lead attempting to book via the hero form is lost silently without notification.
+
+2. **Contact Page Form is a Mock Submission**:
+   - In [`contact.tsx:L26-30`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/contact.tsx#L26-L30), the `submitMessage` handler simply calls `event.preventDefault()`, sets `sent = true`, and resets the form.
+   - There is no database table for contact inquiries, no email dispatch via SMTP/Resend, and no API call.
+   - **Impact**: Inquiries sent through the contact form are permanently lost upon page refresh.
+
+3. **Missing Environment Variables for Google Maps Server Functions**:
+   - [`maps.functions.ts:L6-17`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/lib/maps.functions.ts#L6-L17) expects `process.env["LOVABLE_API_KEY"]` and `process.env["GOOGLE_MAPS_API_KEY"]`.
+   - In [`.env`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/.env), only `VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY` is present.
+   - **Impact**: When run locally or outside Lovable's hosted infrastructure, address autocomplete returns empty lists and distance calculation fails with a fallback error.
+
+4. **Missing Binary Assets for Background Wallpaper**:
+   - [`src/assets/`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/assets) contains `.asset.json` descriptors for `maple-pattern-background.jpg`, `maple-red-background.jpg`, etc., but the actual image files are missing.
+   - As a result, [`site-shell.tsx:L33`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/components/site-shell.tsx#L33) and [`index.tsx:L82`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/index.tsx#L82) only render a flat color gradient overlay without the intended maple wallpaper pattern.
+
+5. **Inconsistent Header & Footer Implementation**:
+   - [`index.tsx`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/index.tsx) does not use [`PageShell`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/components/site-shell.tsx#L32), [`SiteHeader`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/components/site-shell.tsx#L6), or [`SiteFooter`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/components/site-shell.tsx#L23).
+   - The homepage navigation has links to `#services` and `Pricing`, but **omits the link to `/portal` ("My move")**.
+   - The homepage footer does not include the company logo image, unlike [`SiteFooter`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/components/site-shell.tsx#L23).
+
+6. **Deposit Payment Integration Incomplete**:
+   - Online payment processing (Stripe) is not wired up; deposits are left in a `pending` status with manual outreach notes.
+
+---
+
+## 7. Actionable Recommendations
+
+### Priority 1: High (Immediate Bug Fixes & Lead Capture)
+- **Connect Hero Form to the Full Quote Wizard**: Change the homepage hero form button from a dead "Confirm & book" to an action that routes the user to `/quote` with the pre-selected pickup, dropoff, date, and home size pre-populated via URL search params (e.g. `/quote?from=...&to=...&size=...`).
+- **Implement Contact Message Handling**: Add a `contact_messages` table to Supabase or send an email via Resend/SendGrid from a TanStack Start server function in `contact.tsx`.
+- **Align Layout Shells**: Refactor [`index.tsx`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/index.tsx) to use [`PageShell`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/components/site-shell.tsx#L32) and ensure the "My move" portal link is visible across all pages.
+
+### Priority 2: Medium (Infrastructure & Payments)
+- **Local Fallback for Maps API**: Add direct Google Maps Places/Distance Matrix API integration or mock data fallbacks in [`maps.functions.ts`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/lib/maps.functions.ts) when running outside Lovable Cloud.
+- **Payment Processing**: Integrate Stripe Checkout in [`portal.tsx`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/routes/_authenticated/portal.tsx) for automated deposit handling once the merchant account is ready.
+- **Restore Missing Assets**: Place the actual maple pattern background JPEG into [`src/assets/`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/assets) or remove redundant `.asset.json` files and clean up the CSS background style.
+
+### Priority 3: Low (Clean Up & Quality Assurance)
+- **Remove or Repurpose Root `backend/`**: Remove the unused default Express generator project in [`backend/`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/backend) to prevent confusion for future developers.
+- **Add Automated Tests**: Introduce Vitest for unit testing the [`quote-engine.ts`](file:///e:/Fiverr/Gig/Gig%2013/Order/Project%200007/Maple-Leaf-Moving-Co/frontend/src/lib/quote-engine.ts) math and edge cases (peak dates, stairs, crew sizing).

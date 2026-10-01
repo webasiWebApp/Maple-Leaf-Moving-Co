@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Mail, Package, Phone, Truck, Warehouse } from "lucide-react";
+import { Loader2, Mail, Package, Phone, Truck, Warehouse } from "lucide-react";
+import { api } from "@/lib/api";
 import truckStreet from "@/assets/truck-street.jpg";
 
 import crewLoading from "@/assets/crew-loading.jpg";
@@ -39,11 +40,11 @@ export const Route = createFileRoute("/")({
 });
 
 const homeSizes = [
-  { label: "Studio", base: 320 },
-  { label: "1 bedroom apartment", base: 400 },
-  { label: "2 bedroom apartment", base: 480 },
-  { label: "3 bedroom house", base: 650 },
-  { label: "Office / commercial", base: 720 },
+  { id: "studio",  label: "Studio",                base: 320 },
+  { id: "1bed",    label: "1 bedroom apartment",   base: 400 },
+  { id: "2bed",    label: "2 bedroom apartment",   base: 480 },
+  { id: "3bed",    label: "3 bedroom house",        base: 650 },
+  { id: "office",  label: "Office / commercial",   base: 720 },
 ];
 
 const addOns = [
@@ -53,12 +54,14 @@ const addOns = [
 ];
 
 function Index() {
-  const [fromAddress, setFromAddress] = useState("Unit 402, 18 King St W");
-  const [toAddress, setToAddress] = useState("33-1150 Yonge St");
+  const [fromAddress, setFromAddress] = useState("");
+  const [toAddress, setToAddress] = useState("");
   const [homeSizeIndex, setHomeSizeIndex] = useState(2);
   const [moveDate, setMoveDate] = useState("");
-  const [selectedAddOns, setSelectedAddOns] = useState<string[]>(["Packing"]);
-  const [submitted, setSubmitted] = useState(false);
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const [consentTerms, setConsentTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState("");
 
   const base = homeSizes[homeSizeIndex]?.base ?? 0;
   const addOnTotal = addOns
@@ -73,9 +76,46 @@ function Index() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setFormError("");
+
+    if (!fromAddress.trim() || !toAddress.trim()) {
+      setFormError("Please enter both pickup and destination addresses.");
+      return;
+    }
+    if (!moveDate) {
+      setFormError("Please select a move date.");
+      return;
+    }
+    if (!consentTerms) {
+      setFormError("Please accept the Terms & Conditions to continue.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const homeSize = homeSizes[homeSizeIndex]?.id ?? "2bed";
+      const result = await api.post("/checkout/instant", {
+        from: fromAddress.trim(),
+        to: toAddress.trim(),
+        homeSize,
+        date: moveDate,
+        consentTerms: true,
+        // Turnstile token is bypassed in dev (empty string handled by backend when TURNSTILE_SECRET is unset)
+        turnstileToken: "dev-bypass",
+      });
+      if (result?.url) {
+        window.location.assign(result.url);
+      } else {
+        setFormError("Could not create checkout session. Please try again.");
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "An error occurred. Please try again.";
+      setFormError(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -248,6 +288,30 @@ function Index() {
                 ))}
               </div>
 
+              {/* Terms consent */}
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="consentTerms"
+                  checked={consentTerms}
+                  onChange={(e) => setConsentTerms(e.target.checked)}
+                  className="mt-0.5 size-4 accent-maple"
+                />
+                <span className="text-xs leading-relaxed text-ink/60">
+                  I agree to the{" "}
+                  <Link to="/terms" className="underline hover:text-amber">Terms &amp; Conditions</Link>
+                  {" "}and{" "}
+                  <Link to="/refund-policy" className="underline hover:text-amber">Refund Policy</Link>.
+                  Fixed price based on the details entered. See Terms.
+                </span>
+              </label>
+
+              {formError && (
+                <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-xs font-medium text-red-700">
+                  {formError}
+                </p>
+              )}
+
               <div className="flex items-center justify-between rounded-2xl bg-brand px-5 py-4 text-cream">
                 <div>
                   <p className="text-xs uppercase tracking-wider text-cream/60">
@@ -259,20 +323,19 @@ function Index() {
                 </div>
                 <button
                   type="submit"
-                  disabled={submitted}
-                  className="rounded-md bg-maple px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-maple-deep disabled:cursor-not-allowed disabled:opacity-70"
+                  disabled={loading}
+                  className="flex items-center gap-2 rounded-md bg-maple px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-maple-deep disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {submitted ? "Request sent" : "Confirm & book"}
+                  {loading ? (
+                    <><Loader2 className="size-4 animate-spin" /> Redirecting…</>
+                  ) : (
+                    "Confirm & book"
+                  )}
                 </button>
               </div>
             </form>
 
-            {submitted && (
-              <p className="mt-4 text-center text-sm text-ink/70">
-                Thanks! We&apos;ll call you at the number on file within one
-                business hour.
-              </p>
-            )}
+
           </div>
         </div>
       </section>

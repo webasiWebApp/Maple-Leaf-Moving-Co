@@ -9,7 +9,23 @@ import { submitGuestQuote, submitMemberQuote } from "@/lib/booking.functions";
 import { getRouteDistance, suggestAddresses } from "@/lib/maps.functions";
 import { ADD_ONS, ARRIVAL_WINDOWS, calculateQuote, HOME_SIZES, INVENTORY_CATALOG, makeReference, money, peakLabel, STAIRS_OPTIONS } from "@/lib/quote-engine";
 
+// Map homepage homeSizeIndex (0-4) → quote engine HOME_SIZES id
+const INDEX_TO_SIZE_ID = ["studio", "1bed", "2bed", "3bed", "office"] as const;
+// Map homepage add-on labels → quote engine ids
+const LABEL_TO_ADDON_ID: Record<string, string> = {
+  Packing: "packing",
+  Piano: "piano",
+  Storage: "storage",
+};
+
 export const Route = createFileRoute("/quote")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    from: typeof search.from === "string" ? search.from : "",
+    to: typeof search.to === "string" ? search.to : "",
+    homeSizeIndex: typeof search.homeSizeIndex === "string" ? search.homeSizeIndex : "",
+    moveDate: typeof search.moveDate === "string" ? search.moveDate : "",
+    addOns: typeof search.addOns === "string" ? search.addOns : "",
+  }),
   head: () => ({ meta: [
     { title: "Instant Moving Quote | Mapleleaf Moving Co" },
     { name: "description", content: "Build a detailed Toronto moving estimate, choose your date and arrival window, and request your booking online." },
@@ -25,7 +41,24 @@ const initial: FormState = { from: "", to: "", homeSizeId: "1bed", items: {}, ad
 const steps = ["Route", "Inventory", "Schedule", "Details"];
 
 function QuotePage() {
-  const [form, setForm] = useState(initial);
+  const search = Route.useSearch();
+
+  // Seed initial state from homepage quick-estimate params
+  const seedHomeSizeId = INDEX_TO_SIZE_ID[Number(search.homeSizeIndex) || 2] ?? "2bed";
+  const seedAddOns = search.addOns
+    ? search.addOns.split(",").map((l) => LABEL_TO_ADDON_ID[l] ?? l).filter(Boolean)
+    : [];
+  const seedSize = HOME_SIZES.find((s) => s.id === seedHomeSizeId);
+
+  const [form, setForm] = useState<FormState>({
+    ...initial,
+    from: search.from || initial.from,
+    to: search.to || initial.to,
+    homeSizeId: seedHomeSizeId,
+    items: seedSize?.preset ?? {},
+    addOns: seedAddOns,
+    moveDate: search.moveDate || initial.moveDate,
+  });
   const [step, setStep] = useState(0);
   const [distance, setDistance] = useState<{ distanceKm: number | null; driveMinutes: number | null }>({ distanceKm: null, driveMinutes: null });
   const [routeBusy, setRouteBusy] = useState(false);
